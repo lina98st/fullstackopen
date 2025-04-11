@@ -20,9 +20,4 @@ sequenceDiagram
     server-->>javascript: JSON data
     javascript->>browser: Render notes using DOM API
 
-    browser->>browser: User writes note and clicks "Save"
-    javascript->>javascript: preventDefault()
-    javascript->>javascript: create note object
-    javascript->>server: POST /new_note_spa
-    server-->>javascript: 200 OK
-    javascript->>browser: Add new note to DOM
+    Note right of browser: User can also add new notes without reloading the page
