@@ -1,7 +1,8 @@
-import { useState } from 'react'
+import { useState, useEffect } from 'react'
 import Filter from './components/Filter'
 import Persons from './components/Persons'
 import PersonForm from './components/PersonForm'
+import axios from 'axios'
 
 
 const App = () => {
@@ -48,6 +49,15 @@ const App = () => {
     setFilter(event.target.value)
   }
 
+  useEffect(() => {
+    console.log("Daten abrufen")
+    axios
+      .get('http://localhost:3001/persons')
+      .then(response => {
+        console.log('promise fulfilled')
+        setPersons(response.data)
+      })
+  }, [])
 
   return (
     <div>
