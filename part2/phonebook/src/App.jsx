@@ -16,7 +16,6 @@ const App = () => {
     person.name.toLowerCase().includes(filter.toLowerCase())
   )
 
-
   const checkDoubleName = () => {
     return persons.some(person => person.name === newName)
   }
@@ -33,11 +32,30 @@ const App = () => {
   const handleSubmit = (event) => {
     event.preventDefault()
 
+    const existingPerson = persons.find(p => p.name === newName)
 
-    if (checkDoubleName()) {
-      alert(`${newName} is already added to phonebook`)
+    if (existingPerson) {
+      const confirmUpdate = window.confirm(
+        `${newName} is already added to phonebook, replace the old number with the new one?`
+      )
+
+      if (confirmUpdate) {
+        const updatedPerson = { ...existingPerson, number: newNumber }
+
+        personService
+          .update(existingPerson.id, updatedPerson)
+          .then(returnedPerson => {
+            setPersons(persons.map(p =>
+              p.id !== existingPerson.id ? p : returnedPerson
+            ))
+            setNewName('')
+            setNewNumber('')
+          })
+      }
+
       return
     }
+
 
     const newPerson = { name: newName, number: newNumber }
 
