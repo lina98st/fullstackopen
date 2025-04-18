@@ -3,6 +3,9 @@ import Filter from './components/Filter'
 import Persons from './components/Persons'
 import PersonForm from './components/PersonForm'
 import personService from './services/persons'
+import Notification from './components/Notification'
+import './index.css'
+
 
 
 const App = () => {
@@ -11,6 +14,10 @@ const App = () => {
   const [newName, setNewName] = useState('')
   const [newNumber, setNewNumber] = useState('')
   const [filter, setFilter] = useState('')
+  const [notification, setNotification] = useState(null)
+  const [errorMessage, setErrorMessage] = useState(null)
+
+
 
   const personsToShow = persons.filter(person =>
     person.name.toLowerCase().includes(filter.toLowerCase())
@@ -32,12 +39,14 @@ const App = () => {
   const handleSubmit = (event) => {
     event.preventDefault()
 
+
     const existingPerson = persons.find(p => p.name === newName)
 
     if (existingPerson) {
       const confirmUpdate = window.confirm(
         `${newName} is already added to phonebook, replace the old number with the new one?`
       )
+
 
       if (confirmUpdate) {
         const updatedPerson = { ...existingPerson, number: newNumber }
@@ -50,9 +59,15 @@ const App = () => {
             ))
             setNewName('')
             setNewNumber('')
+            setNotification(`Updated ${newName}'s number`)
+            setTimeout(() => setNotification(null), 5000)
+          })
+          .catch(error => {
+            setErrorMessage(`Information of ${newName} has already been removed from the server`)
+            setTimeout(() => setErrorMessage(null), 5000)
+            setPersons(persons.filter(p => p.id !== existingPerson.id))
           })
       }
-
       return
     }
 
@@ -96,6 +111,10 @@ const App = () => {
   return (
     <div>
       <h2>Phonebook</h2>
+
+      <Notification message={notification} type="success" />
+      <Notification message={errorMessage} type="error" />
+
 
       <Filter value={filter} onChange={handleFilterChange} />
 
