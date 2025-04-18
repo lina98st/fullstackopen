@@ -2,12 +2,11 @@ import { useState, useEffect } from 'react'
 import Filter from './components/Filter'
 import Persons from './components/Persons'
 import PersonForm from './components/PersonForm'
-import axios from 'axios'
+import personService from './services/persons'
 
 
 const App = () => {
   const [persons, setPersons] = useState([
-    { name: 'Arto Hellas' }
   ])
   const [newName, setNewName] = useState('')
   const [newNumber, setNewNumber] = useState('')
@@ -34,15 +33,22 @@ const App = () => {
   const handleSubmit = (event) => {
     event.preventDefault()
 
+
     if (checkDoubleName()) {
       alert(`${newName} is already added to phonebook`)
       return
     }
 
     const newPerson = { name: newName, number: newNumber }
-    setPersons(persons.concat(newPerson))
-    setNewName('')
-    setNewNumber('')
+
+
+    personService
+      .create(newPerson)
+      .then(returnedPerson => {
+        setPersons(persons.concat(returnedPerson))
+        setNewName('')
+        setNewNumber('')
+      })
   }
 
   const handleFilterChange = (event) => {
@@ -50,14 +56,24 @@ const App = () => {
   }
 
   useEffect(() => {
-    console.log("Daten abrufen")
-    axios
-      .get('http://localhost:3001/persons')
-      .then(response => {
-        console.log('promise fulfilled')
-        setPersons(response.data)
+    personService
+      .getAll()
+      .then(initialPersons => {
+        setPersons(initialPersons)
       })
   }, [])
+
+  const handleDelete = (id, name) => {
+    const confirmDelete = window.confirm(`Delete ${name}?`)
+    if (confirmDelete) {
+      personService
+        .remove(id)
+        .then(() => {
+          setPersons(persons.filter(person => person.id !== id))
+        })
+    }
+  }
+
 
   return (
     <div>
@@ -75,7 +91,8 @@ const App = () => {
       />
 
       <h3>Numbers</h3>
-      <Persons persons={personsToShow} />
+      <Persons persons={personsToShow} onDelete={handleDelete} />
+
     </div>
   )
 }
