@@ -1,14 +1,13 @@
-import { useState, useEffect } from 'react'
+import { useState, useEffect, useRef } from 'react'
 import axios from 'axios'
-
 
 const App = () => {
   const [countries, setCountries] = useState([])
   const [query, setQuery] = useState('')
   const [weather, setWeather] = useState(null)
 
+  const weatherCache = useRef({})
   const apiKey = import.meta.env.VITE_WEATHER_KEY
-
 
   useEffect(() => {
     axios
@@ -32,13 +31,21 @@ const App = () => {
       const capital = filteredCountries[0].capital?.[0]
       if (!capital) return
 
+      if (weatherCache.current[capital]) {
+        setWeather(weatherCache.current[capital])
+        return
+      }
+
       const apiUrl = `https://api.openweathermap.org/data/2.5/weather?q=${capital}&appid=${apiKey}&units=metric`
 
-      axios.get(apiUrl).then(response => {
-        setWeather(response.data)
-      }).catch(error => {
-        setWeather(null)
-      })
+      axios.get(apiUrl)
+        .then(response => {
+          weatherCache.current[capital] = response.data
+          setWeather(response.data)
+        })
+        .catch(() => {
+          setWeather(null)
+        })
     }
   }, [filteredCountries, apiKey])
 
