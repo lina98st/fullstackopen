@@ -1,28 +1,29 @@
-import { test, expect, describe } from '@playwright/test'
+import { test, expect } from '@playwright/test'
 
-describe('When logged in', () => {
-    test.beforeEach(async ({ page, request }) => {
-        await request.post('/api/testing/reset')
-        await request.post('/api/users', {
-            data: { name: 'Matti Luukkainen', username: 'mluukkai', password: 'salainen' }
-        })
-        await page.goto('/')
+test.describe('Blog app', () => {
+    test.beforeEach(async ({ page }) => {
+        await page.goto('http://localhost:5173')
+
         await page.getByTestId('username').fill('mluukkai')
         await page.getByTestId('password').fill('salainen')
         await page.getByRole('button', { name: 'login' }).click()
-
-        await page.getByRole('button', { name: 'new blog' }).click()
-        await page.getByPlaceholder('Title').fill('Like Test Blog')
-        await page.getByPlaceholder('Author').fill('Alina')
-        await page.getByPlaceholder('Url').fill('http://example.com')
-        await page.getByRole('button', { name: 'create' }).click()
+        await expect(page.getByRole('button', { name: 'logout' })).toBeVisible()
     })
 
-    test('blog can be liked', async ({ page }) => {
-        const blog = page.locator('.blog-summary', { hasText: 'Like Test Blog' }).first()
-        await blog.getByRole('button', { name: 'view' }).click()
-        const likeButton = page.getByRole('button', { name: 'like' })
-        await likeButton.click()
-        await expect(page.getByText('likes 1')).toBeVisible()
+    test('user can like an existing blog', async ({ page }) => {
+        const blogSummary = page.locator('.blog-summary', { hasText: 'Like Test Blog Alina 999' }).first()
+        await blogSummary.getByRole('button', { name: 'view' }).click()
+
+        const blogFull = blogSummary.locator('..').locator('div >> nth=1')
+
+        // get current like count
+        const likeText = await blogFull.locator('text=likes').textContent()
+        const currentLikes = parseInt(likeText.match(/\d+/)[0])
+
+        // click like
+        await blogFull.getByRole('button', { name: 'like' }).click()
+
+        // expect new like count
+        await expect(blogFull.locator(`text=likes ${currentLikes + 1}`)).toBeVisible()
     })
 })
