@@ -1,8 +1,42 @@
-# React + Vite
+# UniCafe Redux – Fullstack Open Part 6
 
-This template provides a minimal setup to get React working in Vite with HMR and some ESLint rules.
+This project is part of the Fullstack Open course (University of Helsinki).  
+It is a simplified feedback app called UniCafe, built using React and Redux.
 
-Currently, two official plugins are available:
+## 📦 Tech stack
 
-- [@vitejs/plugin-react](https://github.com/vitejs/vite-plugin-react/blob/main/packages/plugin-react/README.md) uses [Babel](https://babeljs.io/) for Fast Refresh
-- [@vitejs/plugin-react-swc](https://github.com/vitejs/vite-plugin-react-swc) uses [SWC](https://swc.rs/) for Fast Refresh
+- React (Vite)
+- Redux Toolkit
+
+## 📚 What it does
+
+- Users can leave feedback: `good`, `ok`, or `bad`
+- Feedback is stored in Redux state
+- The app shows statistics: total, average score, percentage of positive feedback
+- Includes a reset button to clear all feedback
+
+## 🚀 How to run
+
+Install dependencies:
+
+```bash
+npm install
+
+Start the app:
+ 
+npm run dev
+Open in browser:
+http://localhost:5173
+
+🗂 File structure
+src/
+  components/
+    App.jsx
+    Statistics.jsx
+    Buttons.jsx
+  redux/
+    store.js
+    feedbackReducer.js
+main.jsx
+
+
