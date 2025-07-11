@@ -1,26 +1,19 @@
-import { useDispatch } from 'react-redux'
-import { createAnecdote } from '../reducers/anecdoteReducer'
-import { showNotification } from '../reducers/notificationReducer'
-
-const AnecdoteForm = () => {
-    const dispatch = useDispatch()
-
-    const addAnecdote = async (event) => {
+const AnecdoteForm = ({ addAnecdote }) => {
+    const handleSubmit = (event) => {
         event.preventDefault()
         const content = event.target.anecdote.value
-        event.target.anecdote.value = ''
 
-        try {
-            await dispatch(createAnecdote(content))
-            dispatch(showNotification(`you created '${content}'`, 5))
-        } catch (error) {
-            dispatch(showNotification('Failed to create anecdote', 5))
+        if (content.length >= 5) {
+            addAnecdote(content)
+            event.target.anecdote.value = ''
+        } else {
+            addAnecdote(content)
         }
     }
 
     return (
-        <form onSubmit={addAnecdote}>
-            <div><input name="anecdote" /></div>
+        <form onSubmit={handleSubmit}>
+            <input name="anecdote" />
             <button type="submit">create</button>
         </form>
     )
