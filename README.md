@@ -1,14 +1,42 @@
-# Fullstack Open 2025
+# Fullstack Open 2025 - Repository
 
-This repository contains my solutions and projects from the [Fullstack Open](https://fullstackopen.com/) course by the University of Helsinki.
+This repository contains exercises and projects from the Fullstack Open 2025 course by the University of Helsinki.  
+The course covers modern web development with React, Node.js, MONGODB, testing, and more.
+
+---
 
 ## Contents
 
-- `part0/` – Fundamentals of the web, HTTP, and browser-server communication
-- `part1/` – Introduction to React, components, props, state
-- `part2/` – Advanced React, forms, modular structure
-- ...
-  
-## Notes
+The repository is structured by parts (part1 to part7). Each part contains related exercises and projects.
 
-All exercises are completed independently as part of the learning process. No code has been copied from others.
+### Part 1  
+- Introduction to React  
+- Basics of components, props, and state
+
+### Part 2  
+- Communicating with server  
+- State management and side effects with hooks
+
+### Part 3  
+- Routing with React Router  
+- Custom hooks  
+- Forms
+
+### Part 4  
+- Backend with Node.js and Express  
+- MongoDB integration
+
+### Part 5  
+- Testing React applications  
+- Integration tests with Jest and React Testing Library
+
+### Part 6  
+- State management with Redux and React-Redux
+
+### Part 7  
+- Advanced React patterns  
+- Custom hooks for resource management  
+- Routing anecdotes project  
+- Country search project  
+- Ultimate hooks project
+
